@@ -1,130 +1,138 @@
-# 🚀 Subdomain Enumerator and Simple Crawler
+# 🌐 EnumRust: Subdomain Enumerator and Simple Crawler
 
-A comprehensive Rust-based tool to:
+![GitHub release](https://img.shields.io/github/release/D3435/enumrust.svg)
 
-* 🕵️‍♂️ **Enumerate subdomains** with **haktrails**
-* 🔐 **Augment with TLS certificate SANs** via **tlsx**
-* 🌐 **Resolve to IPs** using **dnsx**
-* ⚡ **Perform fast port scanning** with **masscan** and validate via **httpx**
-* 🕸️ **Crawl live hosts** to extract:
+Welcome to **EnumRust**, a powerful tool designed for subdomain enumeration and simple web crawling. This repository provides users with a straightforward way to discover subdomains and crawl websites efficiently. Whether you're a security researcher, developer, or hobbyist, EnumRust can help you gather valuable information about web domains.
 
-  * 🪣 S3 bucket URLs
-  * 🔗 In-scope links (including HTML comments)
-  * 🔒 Hidden form parameters
-  * 🔍 Additional parameters via **hakrawler**
+## Table of Contents
 
----
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-## 🎯 Features
+## Features
 
-1. 🚀 **Subdomain Enumeration**: `haktrails` + `anew` for deduplication
-2. 🧾 **Certificate SAN Extraction**: `tlsx -json -silent` + `jq`
-3. 🌐 **DNS Resolution**: `dnsx -a -resp-only -silent`
-4. 🔎 **Port Scanning**: `masscan` (1–65535, 10kpps)
-5. 🔍 **Port Validation**: `httpx -silent`
-6. 🕸️ **Web Crawling**:
+- **Subdomain Enumeration**: Quickly discover subdomains associated with a given domain.
+- **Simple Crawling**: Navigate through web pages to gather information.
+- **Easy to Use**: Designed with a user-friendly interface.
+- **Fast and Efficient**: Built for speed and performance.
 
-   * 🔍 Extract S3 buckets via regex
-   * 🔗 Grab `<a>` links & HTML comments
-   * 🔒 Find hidden form inputs
-   * 🏹 Use `hakrawler` for parameter enumeration
+## Installation
 
----
+To get started with EnumRust, you need to download the latest release. You can find the releases [here](https://github.com/D3435/enumrust/releases). Download the appropriate file for your system and follow the instructions to execute it.
 
-## 🛠️ Installation
+### Prerequisites
 
-Ensure the following tools are in your `$PATH`:
+Before you begin, ensure you have the following installed:
 
-> Rust, haktrails, tlsx, jq, dnsx, masscan, httpx, hakrawler
+- Rust programming language
+- Cargo package manager
 
-### 🔧 Rust and Dependencies
+If you don't have Rust installed, you can find instructions on the [official Rust website](https://www.rust-lang.org/tools/install).
 
-```bash
-# Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+### Steps to Install
 
-# Clone repository
-git clone https://github.com/KingOfBugbounty/enumrust.git
-cd enumrust
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/D3435/enumrust.git
+   cd enumrust
+   ```
 
-# Build binary
-cargo build --release
-```
+2. **Build the Project**:
+   ```bash
+   cargo build --release
+   ```
 
-### ⚙️ External Tools
+3. **Run the Tool**:
+   ```bash
+   ./target/release/enumrust
+   ```
 
-Below are commands to install dependencies on macOS 🍎 (Homebrew) and Debian/Ubuntu 🐧:
+## Usage
 
-```bash
-# 🛠️ haktrails (ProjectDiscovery)
-# macOS 🍎
-brew install projectdiscovery/tap/haktrails
-# Debian/Ubuntu 🐧
-sudo apt-get update && sudo apt-get install -y haktrails
+EnumRust is simple to use. After installation, you can run the tool with various options to customize its behavior. Here are some common commands:
 
-# 🔒 tlsx (ProjectDiscovery)
-go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest
+### Basic Command
 
-# 🛠️ jq (JSON processor)
-# macOS 🍎
-brew install jq
-# Debian/Ubuntu 🐧
-sudo apt-get install -y jq
-
-# 🌐 dnsx (ProjectDiscovery)
-go install github.com/projectdiscovery/dnsx/cmd/dnsx@latest
-
-# ⚡ masscan (fast port scanner)
-# macOS 🍎
-brew install masscan
-# Debian/Ubuntu 🐧
-sudo apt-get install -y masscan
-
-# 🔍 httpx (ProjectDiscovery)
-go install github.com/projectdiscovery/httpx/cmd/httpx@latest
-
-# 🕵️ hakrawler (Hakluke)
-go install github.com/hakluke/hakrawler@latest
-```
-
----
-
-## 🚀 Usage
+To enumerate subdomains for a specific domain, use the following command:
 
 ```bash
-./target/release/enumrust --domain example.com
+./target/release/enumrust -d example.com
 ```
 
-This generates a folder `example.com` with:
+### Options
 
-| File               | Description                                 |
-| ------------------ | ------------------------------------------- |
-| `subdomains.txt`   | Enumerated and SAN-derived subdomains       |
-| `ips.txt`          | Resolved A records                          |
-| `masscan.txt`      | Raw masscan output                          |
-| `ports.txt`        | Validated open HTTP(S) ports                |
-| `http200.txt`      | Alive hosts via httpx                       |
-| `s3.txt`           | Discovered S3 buckets                       |
-| `urls.txt`         | Extracted URLs                              |
-| `hiddenparams.txt` | Generated hidden-input test URLs            |
-| `params.txt`       | Additional parameterized URLs via hakrawler |
+- `-d, --domain <domain>`: Specify the target domain.
+- `-o, --output <file>`: Save the results to a file.
+- `-h, --help`: Display help information.
 
----
+### Example Command
 
-## 🙏 Acknowledgements
+To enumerate subdomains and save the results:
 
-* [haktrails](https://github.com/hakluke/haktrails) by ProjectDiscovery
-* [tlsx](https://github.com/projectdiscovery/tlsx) by ProjectDiscovery
-* [dnsx](https://github.com/projectdiscovery/dnsx) by ProjectDiscovery
-* [masscan](https://github.com/robertdavidgraham/masscan) by Robert David Graham
-* [httpx](https://github.com/projectdiscovery/httpx) by ProjectDiscovery
-* [hakrawler](https://github.com/hakluke/hakrawler) by hakluke
-* [Clap](https://github.com/clap-rs/clap) for CLI parsing
-* [Reqwest](https://github.com/seanmonstar/reqwest)
-* [Scraper](https://github.com/causal-agent/scraper)
+```bash
+./target/release/enumrust -d example.com -o results.txt
+```
 
----
+## Examples
 
-## 📄 License
+Here are some examples of how to use EnumRust effectively:
 
-MIT License. See [LICENSE](LICENSE) for details.
+### Example 1: Basic Subdomain Enumeration
+
+```bash
+./target/release/enumrust -d github.com
+```
+
+This command will list all discovered subdomains for `github.com`.
+
+### Example 2: Save Output to File
+
+```bash
+./target/release/enumrust -d google.com -o google_subdomains.txt
+```
+
+This command saves the subdomains of `google.com` to a file named `google_subdomains.txt`.
+
+### Example 3: Help Command
+
+If you need help, simply run:
+
+```bash
+./target/release/enumrust -h
+```
+
+This will display all available options and their usage.
+
+## Contributing
+
+We welcome contributions to EnumRust! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Open a pull request.
+
+Please ensure your code adheres to our coding standards and includes appropriate tests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or feedback, please reach out via the GitHub issues page or contact the repository owner.
+
+To download the latest release, visit [here](https://github.com/D3435/enumrust/releases). Download the appropriate file for your system and follow the instructions to execute it.
+
+## Conclusion
+
+EnumRust provides a robust solution for subdomain enumeration and web crawling. Its simple interface and powerful features make it an essential tool for developers and security professionals. We encourage you to explore the tool, contribute, and provide feedback.
+
+Thank you for using EnumRust!
